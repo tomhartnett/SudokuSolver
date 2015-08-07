@@ -12,6 +12,9 @@ namespace ConsoleApp
         {
             Console.WriteLine("Begin program.");
 
+            // Puzzle1.txt is medium difficulty
+            // Puzzle2.txt is easy difficulty
+            // Puzzle3.txt is hard difficulty
             Puzzle puzzle = new Puzzle("Puzzle1.txt");
             puzzle.Display();
 
@@ -21,16 +24,25 @@ namespace ConsoleApp
 
             Console.WriteLine("{0} solutions found in {1} seconds.", puzzle.Solutions.Count, elapsed.TotalSeconds);
 
-            string solution = puzzle.Solutions[0];
-            Console.WriteLine(solution.Substring(0, 9));
-            Console.WriteLine(solution.Substring(9, 9));
-            Console.WriteLine(solution.Substring(18, 9));
-            Console.WriteLine(solution.Substring(27, 9));
-            Console.WriteLine(solution.Substring(36, 9));
-            Console.WriteLine(solution.Substring(45, 9));
-            Console.WriteLine(solution.Substring(54, 9));
-            Console.WriteLine(solution.Substring(63, 9));
-            Console.WriteLine(solution.Substring(72, 9));
+            for (int i = 0; i < puzzle.Solutions.Count; i++)
+            {
+                Console.WriteLine("Solution {0}:", i + 1);
+                int[,] solution = puzzle.Solutions[i];
+                for (int row = 0; row < 9; row++)
+                {
+                    Console.WriteLine("{0}{1}{2}{3}{4}{5}{6}{7}{8}",
+                        solution[row, 0],
+                        solution[row, 1],
+                        solution[row, 2],
+                        solution[row, 3],
+                        solution[row, 4],
+                        solution[row, 5],
+                        solution[row, 6],
+                        solution[row, 7],
+                        solution[row, 8]
+                        );
+                }
+            }
 
             Console.WriteLine("End program.");
         }

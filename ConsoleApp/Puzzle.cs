@@ -9,28 +9,25 @@ namespace ConsoleApp
 {
     public class Puzzle
     {
-        public List<Group> Rows { get; }
-        public List<Group> Columns { get; }
-        public List<Group> Grids { get; }
-        public List<Tile> Tiles { get; }
-        public List<string> Solutions { get; }
+        public Group[] Rows { get; }
+        public Group[] Columns { get; }
+        public Group[] Grids { get; }
+        public List<int[,]> Solutions { get; }
 
         public Puzzle()
         {
-            Rows = new List<Group>();
-            Columns = new List<Group>();
-            Grids = new List<Group>();
-            Tiles = new List<Tile>();
-            Solutions = new List<string>();
+            Rows = new Group[9];
+            Columns = new Group[9];
+            Grids = new Group[9];
+            Solutions = new List<int[,]>();
         }
 
         public Puzzle(string filename)
         {
-            Rows = new List<Group>();
-            Columns = new List<Group>();
-            Grids = new List<Group>();
-            Tiles = new List<Tile>();
-            Solutions = new List<string>();
+            Rows = new Group[9];
+            Columns = new Group[9];
+            Grids = new Group[9];
+            Solutions = new List<int[,]>();
 
             int rowIndex = 0;
             using (StreamReader sr = new StreamReader(filename))
@@ -43,7 +40,6 @@ namespace ConsoleApp
                     for (int i = 0; i < 9; i++)
                     {
                         Tile tile = new Tile();
-                        Tiles.Add(tile);
 
                         char c = line[i];
                         if (c == 'B')
@@ -56,11 +52,11 @@ namespace ConsoleApp
                             tile.Value = c - 48; // Convert to "face value" of char; 0 is ascii 48.
                         }
 
-                        row.Tiles.Add(tile);
+                        row.Tiles[i] = tile;
                         tile.RowIndex = rowIndex;
                     }
 
-                    Rows.Add(row);
+                    Rows[rowIndex] = row;
                     rowIndex++;
                 }
             }
@@ -72,116 +68,112 @@ namespace ConsoleApp
 
                 for (int row = 0; row < 9; row++)
                 {
-                    Tile tile = Rows[row].Tiles[col];
-                    column.Tiles.Add(tile);
-                    tile.ColIndex = col;
+                    column.Tiles[row] = Rows[row].Tiles[col];
+                    column.Tiles[row].ColIndex = col;
                 }
 
-                Columns.Add(column);
+                Columns[col] = column;
             }
 
             // Create the grids.
-            for (int gridRow = 0; gridRow < 3; gridRow++)
+            for (int grid = 0; grid < 9; grid++)
             {
-                for (int gridCol = 0; gridCol < 3; gridCol++)
-                {
-                    Group grid = new Group();
-                    Grids.Add(grid);
-                }
+                Group g = new Group();
+                Grids[grid] = g;
             }
 
             
             // Assign tiles to the grids.
             // There's probably an elegant way to do what comes next, but I'm dumb...
-            Grids[0].Tiles.Add(Rows[0].Tiles[0]);
-            Grids[0].Tiles.Add(Rows[0].Tiles[1]);
-            Grids[0].Tiles.Add(Rows[0].Tiles[2]);
-            Grids[0].Tiles.Add(Rows[1].Tiles[0]);
-            Grids[0].Tiles.Add(Rows[1].Tiles[1]);
-            Grids[0].Tiles.Add(Rows[1].Tiles[2]);
-            Grids[0].Tiles.Add(Rows[2].Tiles[0]);
-            Grids[0].Tiles.Add(Rows[2].Tiles[1]);
-            Grids[0].Tiles.Add(Rows[2].Tiles[2]);
+            Grids[0].Tiles[0] = Rows[0].Tiles[0];
+            Grids[0].Tiles[1] = Rows[0].Tiles[1];
+            Grids[0].Tiles[2] = Rows[0].Tiles[2];
+            Grids[0].Tiles[3] = Rows[1].Tiles[0];
+            Grids[0].Tiles[4] = Rows[1].Tiles[1];
+            Grids[0].Tiles[5] = Rows[1].Tiles[2];
+            Grids[0].Tiles[6] = Rows[2].Tiles[0];
+            Grids[0].Tiles[7] = Rows[2].Tiles[1];
+            Grids[0].Tiles[8] = Rows[2].Tiles[2];
 
-            Grids[1].Tiles.Add(Rows[0].Tiles[3]);
-            Grids[1].Tiles.Add(Rows[0].Tiles[4]);
-            Grids[1].Tiles.Add(Rows[0].Tiles[5]);
-            Grids[1].Tiles.Add(Rows[1].Tiles[3]);
-            Grids[1].Tiles.Add(Rows[1].Tiles[4]);
-            Grids[1].Tiles.Add(Rows[1].Tiles[5]);
-            Grids[1].Tiles.Add(Rows[2].Tiles[3]);
-            Grids[1].Tiles.Add(Rows[2].Tiles[4]);
-            Grids[1].Tiles.Add(Rows[2].Tiles[5]);
+            Grids[1].Tiles[0] = Rows[0].Tiles[3];
+            Grids[1].Tiles[1] = Rows[0].Tiles[4];
+            Grids[1].Tiles[2] = Rows[0].Tiles[5];
+            Grids[1].Tiles[3] = Rows[1].Tiles[3];
+            Grids[1].Tiles[4] = Rows[1].Tiles[4];
+            Grids[1].Tiles[5] = Rows[1].Tiles[5];
+            Grids[1].Tiles[6] = Rows[2].Tiles[3];
+            Grids[1].Tiles[7] = Rows[2].Tiles[4];
+            Grids[1].Tiles[8] = Rows[2].Tiles[5];
 
-            Grids[2].Tiles.Add(Rows[0].Tiles[6]);
-            Grids[2].Tiles.Add(Rows[0].Tiles[7]);
-            Grids[2].Tiles.Add(Rows[0].Tiles[8]);
-            Grids[2].Tiles.Add(Rows[1].Tiles[6]);
-            Grids[2].Tiles.Add(Rows[1].Tiles[7]);
-            Grids[2].Tiles.Add(Rows[1].Tiles[8]);
-            Grids[2].Tiles.Add(Rows[2].Tiles[6]);
-            Grids[2].Tiles.Add(Rows[2].Tiles[7]);
-            Grids[2].Tiles.Add(Rows[2].Tiles[8]);
+            Grids[2].Tiles[0] = Rows[0].Tiles[6];
+            Grids[2].Tiles[1] = Rows[0].Tiles[7];
+            Grids[2].Tiles[2] = Rows[0].Tiles[8];
+            Grids[2].Tiles[3] = Rows[1].Tiles[6];
+            Grids[2].Tiles[4] = Rows[1].Tiles[7];
+            Grids[2].Tiles[5] = Rows[1].Tiles[8];
+            Grids[2].Tiles[6] = Rows[2].Tiles[6];
+            Grids[2].Tiles[7] = Rows[2].Tiles[7];
+            Grids[2].Tiles[8] = Rows[2].Tiles[8];
 
-            Grids[3].Tiles.Add(Rows[3].Tiles[0]);
-            Grids[3].Tiles.Add(Rows[3].Tiles[1]);
-            Grids[3].Tiles.Add(Rows[3].Tiles[2]);
-            Grids[3].Tiles.Add(Rows[4].Tiles[0]);
-            Grids[3].Tiles.Add(Rows[4].Tiles[1]);
-            Grids[3].Tiles.Add(Rows[4].Tiles[2]);
-            Grids[3].Tiles.Add(Rows[5].Tiles[0]);
-            Grids[3].Tiles.Add(Rows[5].Tiles[1]);
-            Grids[3].Tiles.Add(Rows[5].Tiles[2]);
+            Grids[3].Tiles[0] = Rows[3].Tiles[0];
+            Grids[3].Tiles[1] = Rows[3].Tiles[1];
+            Grids[3].Tiles[2] = Rows[3].Tiles[2];
+            Grids[3].Tiles[3] = Rows[4].Tiles[0];
+            Grids[3].Tiles[4] = Rows[4].Tiles[1];
+            Grids[3].Tiles[5] = Rows[4].Tiles[2];
+            Grids[3].Tiles[6] = Rows[5].Tiles[0];
+            Grids[3].Tiles[7] = Rows[5].Tiles[1];
+            Grids[3].Tiles[8] = Rows[5].Tiles[2];
 
-            Grids[4].Tiles.Add(Rows[3].Tiles[3]);
-            Grids[4].Tiles.Add(Rows[3].Tiles[4]);
-            Grids[4].Tiles.Add(Rows[3].Tiles[5]);
-            Grids[4].Tiles.Add(Rows[4].Tiles[3]);
-            Grids[4].Tiles.Add(Rows[4].Tiles[4]);
-            Grids[4].Tiles.Add(Rows[4].Tiles[5]);
-            Grids[4].Tiles.Add(Rows[5].Tiles[3]);
-            Grids[4].Tiles.Add(Rows[5].Tiles[4]);
-            Grids[4].Tiles.Add(Rows[5].Tiles[5]);
+            Grids[4].Tiles[0] = Rows[3].Tiles[3];
+            Grids[4].Tiles[1] = Rows[3].Tiles[4];
+            Grids[4].Tiles[2] = Rows[3].Tiles[5];
+            Grids[4].Tiles[3] = Rows[4].Tiles[3];
+            Grids[4].Tiles[4] = Rows[4].Tiles[4];
+            Grids[4].Tiles[5] = Rows[4].Tiles[5];
+            Grids[4].Tiles[6] = Rows[5].Tiles[3];
+            Grids[4].Tiles[7] = Rows[5].Tiles[4];
+            Grids[4].Tiles[8] = Rows[5].Tiles[5];
 
-            Grids[5].Tiles.Add(Rows[3].Tiles[6]);
-            Grids[5].Tiles.Add(Rows[3].Tiles[7]);
-            Grids[5].Tiles.Add(Rows[3].Tiles[8]);
-            Grids[5].Tiles.Add(Rows[4].Tiles[6]);
-            Grids[5].Tiles.Add(Rows[4].Tiles[7]);
-            Grids[5].Tiles.Add(Rows[4].Tiles[8]);
-            Grids[5].Tiles.Add(Rows[5].Tiles[6]);
-            Grids[5].Tiles.Add(Rows[5].Tiles[7]);
-            Grids[5].Tiles.Add(Rows[5].Tiles[8]);
+            Grids[5].Tiles[0] = Rows[3].Tiles[6];
+            Grids[5].Tiles[1] = Rows[3].Tiles[7];
+            Grids[5].Tiles[2] = Rows[3].Tiles[8];
+            Grids[5].Tiles[3] = Rows[4].Tiles[6];
+            Grids[5].Tiles[4] = Rows[4].Tiles[7];
+            Grids[5].Tiles[5] = Rows[4].Tiles[8];
+            Grids[5].Tiles[6] = Rows[5].Tiles[6];
+            Grids[5].Tiles[7] = Rows[5].Tiles[7];
+            Grids[5].Tiles[8] = Rows[5].Tiles[8];
 
-            Grids[6].Tiles.Add(Rows[6].Tiles[0]);
-            Grids[6].Tiles.Add(Rows[6].Tiles[1]);
-            Grids[6].Tiles.Add(Rows[6].Tiles[2]);
-            Grids[6].Tiles.Add(Rows[7].Tiles[0]);
-            Grids[6].Tiles.Add(Rows[7].Tiles[1]);
-            Grids[6].Tiles.Add(Rows[7].Tiles[2]);
-            Grids[6].Tiles.Add(Rows[8].Tiles[0]);
-            Grids[6].Tiles.Add(Rows[8].Tiles[1]);
-            Grids[6].Tiles.Add(Rows[8].Tiles[2]);
+            Grids[6].Tiles[0] = Rows[6].Tiles[0];
+            Grids[6].Tiles[1] = Rows[6].Tiles[1];
+            Grids[6].Tiles[2] = Rows[6].Tiles[2];
+            Grids[6].Tiles[3] = Rows[7].Tiles[0];
+            Grids[6].Tiles[4] = Rows[7].Tiles[1];
+            Grids[6].Tiles[5] = Rows[7].Tiles[2];
+            Grids[6].Tiles[6] = Rows[8].Tiles[0];
+            Grids[6].Tiles[7] = Rows[8].Tiles[1];
+            Grids[6].Tiles[8] = Rows[8].Tiles[2];
 
-            Grids[7].Tiles.Add(Rows[6].Tiles[3]);
-            Grids[7].Tiles.Add(Rows[6].Tiles[4]);
-            Grids[7].Tiles.Add(Rows[6].Tiles[5]);
-            Grids[7].Tiles.Add(Rows[7].Tiles[3]);
-            Grids[7].Tiles.Add(Rows[7].Tiles[4]);
-            Grids[7].Tiles.Add(Rows[7].Tiles[5]);
-            Grids[7].Tiles.Add(Rows[8].Tiles[3]);
-            Grids[7].Tiles.Add(Rows[8].Tiles[4]);
-            Grids[7].Tiles.Add(Rows[8].Tiles[5]);
+            Grids[7].Tiles[0] = Rows[6].Tiles[3];
+            Grids[7].Tiles[1] = Rows[6].Tiles[4];
+            Grids[7].Tiles[2] = Rows[6].Tiles[5];
+            Grids[7].Tiles[3] = Rows[7].Tiles[3];
+            Grids[7].Tiles[4] = Rows[7].Tiles[4];
+            Grids[7].Tiles[5] = Rows[7].Tiles[5];
+            Grids[7].Tiles[6] = Rows[8].Tiles[3];
+            Grids[7].Tiles[7] = Rows[8].Tiles[4];
+            Grids[7].Tiles[8] = Rows[8].Tiles[5];
 
-            Grids[8].Tiles.Add(Rows[6].Tiles[6]);
-            Grids[8].Tiles.Add(Rows[6].Tiles[7]);
-            Grids[8].Tiles.Add(Rows[6].Tiles[8]);
-            Grids[8].Tiles.Add(Rows[7].Tiles[6]);
-            Grids[8].Tiles.Add(Rows[7].Tiles[7]);
-            Grids[8].Tiles.Add(Rows[7].Tiles[8]);
-            Grids[8].Tiles.Add(Rows[8].Tiles[6]);
-            Grids[8].Tiles.Add(Rows[8].Tiles[7]);
-            Grids[8].Tiles.Add(Rows[8].Tiles[8]);
+            Grids[8].Tiles[0] = Rows[6].Tiles[6];
+            Grids[8].Tiles[1] = Rows[6].Tiles[7];
+            Grids[8].Tiles[2] = Rows[6].Tiles[8];
+            Grids[8].Tiles[3] = Rows[7].Tiles[6];
+            Grids[8].Tiles[4] = Rows[7].Tiles[7];
+            Grids[8].Tiles[5] = Rows[7].Tiles[8];
+            Grids[8].Tiles[6] = Rows[8].Tiles[6];
+            Grids[8].Tiles[7] = Rows[8].Tiles[7];
+            Grids[8].Tiles[8] = Rows[8].Tiles[8];
 
             for (int grid = 0; grid < 9; grid++)
             {
@@ -219,6 +211,16 @@ namespace ConsoleApp
             InitPossibleValues();
             Console.WriteLine("Computing row solutions...");
             ComputeRowSolutions();
+            int solutionCount = Rows[0].Solutions.Count *
+                Rows[1].Solutions.Count *
+                Rows[2].Solutions.Count *
+                Rows[3].Solutions.Count *
+                Rows[4].Solutions.Count *
+                Rows[5].Solutions.Count *
+                Rows[6].Solutions.Count *
+                Rows[7].Solutions.Count *
+                Rows[8].Solutions.Count;
+            Console.WriteLine("Found {0} row solutions.", solutionCount.ToString("#,##0"));
             Console.WriteLine("Checking solutions against each other...");
             CheckSolutions();
         }
@@ -326,18 +328,7 @@ namespace ConsoleApp
 
                                                     if (dupList.Count == 9)
                                                     {
-                                                        Rows[row].Solutions.Add(
-                                                            string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}",
-                                                                a,
-                                                                b,
-                                                                c,
-                                                                d,
-                                                                e,
-                                                                f,
-                                                                g,
-                                                                h,
-                                                                i)
-                                                        );
+                                                        Rows[row].Solutions.Add(new int[] { a, b, c, d, e, f, g, h, i });
                                                     }
 
                                                     iIdx++;
@@ -400,6 +391,7 @@ namespace ConsoleApp
                                         {
                                             do
                                             {
+
                                                 Rows[0].AssignValues(Rows[0].Solutions[aIdx]);
                                                 Rows[1].AssignValues(Rows[1].Solutions[bIdx]);
                                                 Rows[2].AssignValues(Rows[2].Solutions[cIdx]);
@@ -435,18 +427,14 @@ namespace ConsoleApp
 
                                                 if (failed == 0)
                                                 {
-                                                    string solution = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}",
-                                                        Rows[0].Solutions[aIdx],
-                                                        Rows[1].Solutions[bIdx],
-                                                        Rows[2].Solutions[cIdx],
-                                                        Rows[3].Solutions[dIdx],
-                                                        Rows[4].Solutions[eIdx],
-                                                        Rows[5].Solutions[fIdx],
-                                                        Rows[6].Solutions[gIdx],
-                                                        Rows[7].Solutions[hIdx],
-                                                        Rows[8].Solutions[iIdx]
-                                                        );
-
+                                                    int[,] solution = new int[9, 9];
+                                                    for (int row = 0; row < 9; row++)
+                                                    {
+                                                        for (int col = 0; col < 9; col++)
+                                                        {
+                                                            solution[row, col] = Rows[row].Tiles[col].Value;
+                                                        }
+                                                    }
                                                     Solutions.Add(solution);
                                                 }
 

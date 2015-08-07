@@ -8,13 +8,13 @@ namespace ConsoleApp
 {
     public class Group
     {
-        public List<Tile> Tiles { get; set; }
-        public List<string> Solutions { get; }
+        public Tile[] Tiles { get; }
+        public List<int[]> Solutions { get; }
 
         public Group()
         {
-            Tiles = new List<Tile>();
-            Solutions = new List<string>();
+            Tiles = new Tile[9];
+            Solutions = new List<int[]>();
         }
 
         public List<int> GetGivenValues()
@@ -30,11 +30,11 @@ namespace ConsoleApp
             return givenValues;
         }
 
-        public void AssignValues(string valueList)
+        public void AssignValues(int[] values)
         {
             for (int i = 0; i < 9; i++)
             {
-                Tiles[i].Value = valueList[i] - 48;
+                Tiles[i].Value =values[i];
             }
         }
 
