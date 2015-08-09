@@ -220,8 +220,8 @@ namespace ConsoleApp
                 Rows[6].Solutions.Count *
                 Rows[7].Solutions.Count *
                 Rows[8].Solutions.Count;
-            Console.WriteLine("Found {0} row solutions.", solutionCount.ToString("#,##0"));
-            Console.WriteLine("Checking solutions against each other...");
+            Console.WriteLine("{0} permutations to check.", solutionCount.ToString("#,##0"));
+            Console.WriteLine("Checking each permutation...");
             CheckSolutions();
         }
 
@@ -375,31 +375,31 @@ namespace ConsoleApp
 
             do
             {
+                Rows[0].AssignValues(Rows[0].Solutions[aIdx]);
                 do
                 {
+                    Rows[1].AssignValues(Rows[1].Solutions[bIdx]);
                     do
                     {
+                        Rows[2].AssignValues(Rows[2].Solutions[cIdx]);
                         do
                         {
+                            Rows[3].AssignValues(Rows[3].Solutions[dIdx]);
                             do
                             {
+                                Rows[4].AssignValues(Rows[4].Solutions[eIdx]);
                                 do
                                 {
+                                    Rows[5].AssignValues(Rows[5].Solutions[fIdx]);
                                     do
                                     {
+                                        Rows[6].AssignValues(Rows[6].Solutions[gIdx]);
                                         do
                                         {
+                                            Rows[7].AssignValues(Rows[7].Solutions[hIdx]);
                                             do
                                             {
 
-                                                Rows[0].AssignValues(Rows[0].Solutions[aIdx]);
-                                                Rows[1].AssignValues(Rows[1].Solutions[bIdx]);
-                                                Rows[2].AssignValues(Rows[2].Solutions[cIdx]);
-                                                Rows[3].AssignValues(Rows[3].Solutions[dIdx]);
-                                                Rows[4].AssignValues(Rows[4].Solutions[eIdx]);
-                                                Rows[5].AssignValues(Rows[5].Solutions[fIdx]);
-                                                Rows[6].AssignValues(Rows[6].Solutions[gIdx]);
-                                                Rows[7].AssignValues(Rows[7].Solutions[hIdx]);
                                                 Rows[8].AssignValues(Rows[8].Solutions[iIdx]);
 
                                                 int failed = 0;
