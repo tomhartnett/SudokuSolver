@@ -1,6 +1,6 @@
 # SudokuSolver
-My C# Sudoku-solving program.
+My C# Sudoku-solving program.  This is a WinForms app developed with Visual Studio 2015 Community Edition.  It will solve easy Sudoku puzzles fairly quick, but it can take a long time to solve harder puzzles.  It could use the refactoring for performance.
 
-This is a C# program that solves Sudoku puzzles.  It is not especially elegant.  It uses lots of loops and is rather brute force in its approach.
+![Screenshot 1](SSolve/screenshot1.png)
 
-It is currently only a ConsoleApp.  If I improve the its solving-speed to an acceptable level, I'll make a pretty GUI for it.
+![Screenshot 2](SSolve/screenshot2.png)
