@@ -128,9 +128,9 @@ namespace SSolve
 
         public void Solve()
         {
-            Console.WriteLine("Initializing possible tile values...");
+            System.Diagnostics.Debug.WriteLine("Initializing possible tile values...");
             InitPossibleValues();
-            Console.WriteLine("Computing row solutions...");
+            System.Diagnostics.Debug.WriteLine("Computing row solutions...");
             ComputeRowSolutions();
             int solutionCount = Rows[0].Solutions.Count *
                 Rows[1].Solutions.Count *
@@ -141,8 +141,8 @@ namespace SSolve
                 Rows[6].Solutions.Count *
                 Rows[7].Solutions.Count *
                 Rows[8].Solutions.Count;
-            Console.WriteLine("{0} permutations to check.", solutionCount.ToString("#,##0"));
-            Console.WriteLine("Checking each permutation...");
+            System.Diagnostics.Debug.WriteLine(string.Format("{0} permutations to check.", solutionCount.ToString("#,##0")));
+            System.Diagnostics.Debug.WriteLine("Checking each permutation...");
             CheckSolutions();
         }
 
